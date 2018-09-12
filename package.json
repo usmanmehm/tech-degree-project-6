@@ -1,0 +1,29 @@
+{
+  "name": "tech-degree-project-6",
+  "version": "1.0.0",
+  "description": "Building a content scraper using Node.js to take info from a website and put it into a .csv file to be read by a database",
+  "main": "scraper.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "crawler": "^1.2.0",
+    "jquery": "^3.3.1",
+    "json2csv": "^4.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "tech-degree-project-6"
+  },
+  "keywords": [
+    "node",
+    "content",
+    "scraper",
+    "web",
+    "database"
+  ],
+  "author": "Usman Mehmood",
+  "license": "MIT"
+}
