@@ -5,12 +5,26 @@ var fs = require('fs');
 let shirtURLs = [];
 let shirts = [];
 
+const date = new Date();
+const hour = date.getHours();
+const minutes = date.getMinutes();
+const year = date.getFullYear();
+const month = date.getMonth();
+const day = date.getDate();
+const dayMonthYear = year + "-" + month + "-" + day;
+
 var c = new Crawler({
     maxConnections : 10,
+    retries: 0,
     // This will be called for each crawled page
     callback : function (error, res, done) {
         if(error){
-            console.log(error);
+            const errorMessage = date + ': There was an error connecting to the website. Error message: ' + error.message + '\n';
+            console.log(errorMessage);
+            fs.appendFile('error-log.txt', errorMessage, (err) => {
+              if (err) throw err;
+              console.log('The error log was updated!');
+            });
         }else{
             var $ = res.$;
             // $ is Cheerio by default
@@ -20,7 +34,6 @@ var c = new Crawler({
               let shirtURL = 'http://shirts4mike.com/' + shirtList[i].attribs.href;
               shirtURLs.push(shirtURL);
             }
-            console.log(shirtURLs);
         }
         done();
     }
@@ -37,7 +50,12 @@ setTimeout(
 
         callback: function (error, res, done) {
             if(error){
-              console.log(error);
+              const errorMessage = date + ': There was an error connecting to the website. Error message: ' + error.message + '\n';
+              console.log(errorMessage);
+              fs.appendFile('error-log.txt', errorMessage, (err) => {
+                if (err) throw err;
+                console.log('The error log was updated!');
+              });
             }else{
               var $ = res.$;
               const price = $('.price').text();
@@ -45,10 +63,11 @@ setTimeout(
               const imageURL = 'http://shirts4mike.com/' + $('.shirt-picture img')[0].attribs.src;
               // const URL =
               shirtInfo = {
-                "title": title,
-                "price": price,
-                "URL": URL,
-                "imageURL": imageURL
+                title,
+                price,
+                imageURL,
+                URL,
+                time: dayMonthYear
               }
               shirts.push(shirtInfo);
             }
@@ -64,15 +83,27 @@ setTimeout( function () {
   const options = {
     fields: ''
   }
-  try {
-    const csv = json2csv(shirts);
-    console.log(csv);
-    fs.writeFile("data/result.csv", csv, err => {
-      console.log('File successfully written to disk');
+  if (shirts.length !== 0) {
+    try {
+      const csv = json2csv(shirts);
+      fs.writeFile("data/" + dayMonthYear + ".csv", csv, err => {
+        console.log('File successfully written to disk');
+        if (err) throw err;
+       })
+    } catch (err) {
+      const errorMessage = date + ': There was an error converting the data to .csv! Error message: ' + error.message + '\n';
+      console.log(errorMessage);
+      fs.appendFile('error-log.txt', errorMessage, (err) => {
+        if (err) throw err;
+        console.log('The error log was updated!');
+      });
+    }
+  } else {
+    const errorMessage = date + ': There was an error converting the data to .csv! No data was scraped from the web.\n';
+    console.log(errorMessage);
+    fs.appendFile('error-log.txt', errorMessage, (err) => {
       if (err) throw err;
-     })
-  } catch (err) {
-    console.error(err);
+      console.log('The error log was updated!');
+    });
   }
-
 }, 2000)

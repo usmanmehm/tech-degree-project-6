@@ -1,0 +1,8 @@
+2018-8-13: There was an error connecting to the website. Error message: getaddrinfo ENOTFOUND shirts4mike.com shirts4mike.com:80
+2018-8-13: There was an error converting the data to .csv! No data was scraped from the web.
+2018-8-13-13:13: There was an error connecting to the website. Error message: getaddrinfo ENOTFOUND shirts4mike.com shirts4mike.com:80
+2018-8-13-13:13: There was an error converting the data to .csv! No data was scraped from the web.
+Thu Sep 13 2018 13:21:33 GMT-0400 (Eastern Daylight Time): There was an error connecting to the website. Error message: getaddrinfo ENOTFOUND shirts4mike.com shirts4mike.com:80
+Thu Sep 13 2018 13:21:33 GMT-0400 (Eastern Daylight Time): There was an error converting the data to .csv! No data was scraped from the web.
+Thu Sep 13 2018 13:25:57 GMT-0400 (Eastern Daylight Time): There was an error connecting to the website. Error message: getaddrinfo ENOTFOUND shirts4mike.com shirts4mike.com:80
+Thu Sep 13 2018 13:25:57 GMT-0400 (Eastern Daylight Time): There was an error converting the data to .csv! No data was scraped from the web.
