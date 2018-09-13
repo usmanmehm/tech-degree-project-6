@@ -67,7 +67,7 @@ setTimeout(
                 price,
                 imageURL,
                 URL,
-                time: dayMonthYear
+                time: hour + ':' + minutes
               }
               shirts.push(shirtInfo);
             }
@@ -87,7 +87,7 @@ setTimeout( function () {
     try {
       const csv = json2csv(shirts);
       fs.writeFile("data/" + dayMonthYear + ".csv", csv, err => {
-        console.log('File successfully written to disk');
+        console.log('Scraping successful and file successfully written to disk');
         if (err) throw err;
        })
     } catch (err) {
