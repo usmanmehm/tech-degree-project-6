@@ -4,6 +4,7 @@ var fs = require('fs');
 
 let shirtURLs = [];
 let shirts = [];
+let reqInProgress= true;
 
 const date = new Date();
 const hour = date.getHours();
@@ -26,6 +27,7 @@ var c = new Crawler({
               console.log('The error log was updated!');
             });
         }else{
+            console.log('hello');
             var $ = res.$;
             // $ is Cheerio by default
             //a lean implementation of core jQuery designed specifically for the server
@@ -34,7 +36,10 @@ var c = new Crawler({
               let shirtURL = 'http://shirts4mike.com/' + shirtList[i].attribs.href;
               shirtURLs.push(shirtURL);
             }
+
+
         }
+        reqInProgress = false;
         done();
     }
 });
@@ -42,12 +47,10 @@ var c = new Crawler({
 // Queue just one URL, with default callback
 c.queue('http://shirts4mike.com/shirts.php');
 
-setTimeout(
-  function () {
+setTimeout( function () {
     shirtURLs.forEach( URL => {
       c.queue([{
         uri: URL,
-
         callback: function (error, res, done) {
             if(error){
               const errorMessage = date + ': There was an error connecting to the website. Error message: ' + error.message + '\n';
@@ -71,15 +74,16 @@ setTimeout(
               }
               shirts.push(shirtInfo);
             }
+            console.log(shirts)
             done();
         }
     }]);
   })
 
-}, 1000);
+}, 4000);
 
 setTimeout( function () {
-  // console.log(shirts);
+  console.log(shirts);
   const options = {
     fields: ''
   }
@@ -106,4 +110,4 @@ setTimeout( function () {
       console.log('The error log was updated!');
     });
   }
-}, 2000)
+}, 5500)
