@@ -6,12 +6,19 @@ let shirtURLs = [];
 let shirts = [];
 let reqInProgress= true;
 
+const dir = './data';
+
+
 const date = new Date();
-const hour = date.getHours();
-const minutes = date.getMinutes();
-const year = date.getFullYear();
-const month = date.getMonth();
-const day = date.getDate();
+let hour = date.getHours();
+hour = hour > 9? hour : "0" + hour;
+let minutes = date.getMinutes();
+minutes = minutes > 9? minutes : "0" + minutes;
+let year = date.getFullYear();
+let month = date.getMonth()+1;
+month = month > 9? month : "0" + month;
+let day = date.getDate();
+day = day > 9? day : "0" + day;
 const dayMonthYear = year + "-" + month + "-" + day;
 
 var c = new Crawler({
@@ -27,7 +34,6 @@ var c = new Crawler({
               console.log('The error log was updated!');
             });
         }else{
-            console.log('hello');
             var $ = res.$;
             // $ is Cheerio by default
             //a lean implementation of core jQuery designed specifically for the server
@@ -74,13 +80,15 @@ setTimeout( function () {
               }
               shirts.push(shirtInfo);
             }
-            console.log(shirts)
             done();
         }
     }]);
   })
 
 }, 4000);
+
+
+
 
 setTimeout( function () {
   console.log(shirts);
@@ -90,6 +98,9 @@ setTimeout( function () {
   if (shirts.length !== 0) {
     try {
       const csv = json2csv(shirts);
+      if (!fs.existsSync(dir)){
+          fs.mkdirSync(dir);
+      }
       fs.writeFile("data/" + dayMonthYear + ".csv", csv, err => {
         console.log('Scraping successful and file successfully written to disk');
         if (err) throw err;
