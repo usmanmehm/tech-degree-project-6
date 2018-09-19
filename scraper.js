@@ -2,13 +2,13 @@ var Crawler = require("crawler");
 var json2csv = require('json2csv').parse;
 var fs = require('fs');
 
+// Arrays that will store the URLs and shirt info
 let shirtURLs = [];
 let shirts = [];
-let reqInProgress= true;
 
-const dir = './data';
-
-
+//These date variables will be used to log errors and the file name
+// A conditional is used after most of them to ensure that, for example,
+// if the time is 9:08, it won't print as 9:8
 const date = new Date();
 let hour = date.getHours();
 hour = hour > 9? hour : "0" + hour;
@@ -21,6 +21,8 @@ let day = date.getDate();
 day = day > 9? day : "0" + day;
 const dayMonthYear = year + "-" + month + "-" + day;
 
+
+// The crawler that gets the URLs of the individual shirts
 var c = new Crawler({
     maxConnections : 10,
     retries: 0,
@@ -45,7 +47,6 @@ var c = new Crawler({
 
 
         }
-        reqInProgress = false;
         done();
     }
 });
@@ -53,6 +54,9 @@ var c = new Crawler({
 // Queue just one URL, with default callback
 c.queue('http://shirts4mike.com/shirts.php');
 
+
+// A delay is used to ensure the initial scraping has completed
+// The URLs are then accessed one-by-one and the shirt info is scraped
 setTimeout( function () {
     shirtURLs.forEach( URL => {
       c.queue([{
@@ -87,24 +91,28 @@ setTimeout( function () {
 
 }, 4000);
 
-
-
-
+// Another delay is used to make sure that the shirt info is scraped
+// Then the .csv file is made within a data folder. The program will check
+// whether the data folder exists and if not, will create it.
 setTimeout( function () {
   console.log(shirts);
   const options = {
     fields: ''
   }
+  // This will catch errors where data was not scraped from the web or this function
+  // executed before the scraping was done.
   if (shirts.length !== 0) {
     try {
       const csv = json2csv(shirts);
-      if (!fs.existsSync(dir)){
-          fs.mkdirSync(dir);
+      if (!fs.existsSync('./data')){
+          fs.mkdirSync('./data');
       }
       fs.writeFile("data/" + dayMonthYear + ".csv", csv, err => {
         console.log('Scraping successful and file successfully written to disk');
         if (err) throw err;
        })
+
+   // For any other errors. 
     } catch (err) {
       const errorMessage = date + ': There was an error converting the data to .csv! Error message: ' + error.message + '\n';
       console.log(errorMessage);
